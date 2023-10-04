@@ -2,7 +2,7 @@
 
 Dieses Repository beinhaltet den Code der zum Ausrechnen der Quersummen (für Teil a & b) und Darstellen der Anzahl der Quersummen in Abhängigkeit von `s` (für Teil b) der 1. Aufgabe, der 1. Runde, der 63. Mathematikolympiade für die 9.- und 10. Klasse benutzt wurde.
 
-## Ausrechnen (`/Calculator`)
+## Ausrechnen
 
 - benötigt eine Rust-Installation (alternativ `shell.nix` für nixOS)
 
