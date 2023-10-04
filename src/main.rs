@@ -3,7 +3,8 @@ use num_bigint::{BigUint, ToBigUint};
 use std::collections::HashMap;
 
 fn main() {
-    count_cross_sums_per_s(1..100);
+    print_cross_sums_per_s(1..100);
+    //count_cross_sums_per_s(1..100);
 }
 
 fn count_cross_sums_per_s(s_range: Range<usize>) {

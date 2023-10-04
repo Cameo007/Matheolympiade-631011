@@ -17,15 +17,7 @@ pkgs.mkShell {
     rust
   ] ++ (with pkgs; [
     rust-analyzer
-    pkg-config
-    libiconv
-    pango
-    gtk4
   ]);
   NIX_ENFORCE_PURITY = 0;
   RUST_BACKTRACE = 1;
-  
-  shellHook = ''
-    codium .
-  '';
 }
