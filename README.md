@@ -1,8 +1,18 @@
 # Matheolympiade-631011
 
-Dieses Repository beinhaltet den Code der zum Ausrechnen (Rust) und Darstellen (Python) der 1. Aufgabe, der 1. Runde, der 63. Mathematikolympiade für die 9.- und 10. Klasse benutzt wurde.
+Dieses Repository beinhaltet den Code der zum Ausrechnen der Quersummen (für Teil a & b) und Darstellen der Anzahl der Quersummen in Abhängigkeit von `s` (für Teil b) der 1. Aufgabe, der 1. Runde, der 63. Mathematikolympiade für die 9.- und 10. Klasse benutzt wurde.
 
-## Ausrechnen (Rust)
-- benötigt eine Rust-Installation (alternativ `rust-shell.nix` für nixOS`)
-- `cargo run` (berechnet im ist-Zustand Alle Quersummen von s=1 bis s=99 nach dem vorgegebenen Muster und gibt diese aus)
-- Der Code muss geändert werden (Werte ändern bzw. auskommentierte Zeile), um entweder einen anderen Wertebereich 
+## Ausrechnen (`/Calculator`)
+
+- benötigt eine Rust-Installation (alternativ `shell.nix` für nixOS)
+
+ 1. `cargo run 1 100` (berechnet alle Quersummen von `s=1` bis `s=100` nach dem vorgegebenen Muster und schreibt diese in `../Data/result_1-100.txt`)
+
+## Darstellen der Anzahl der Quersummen in Abhängigkeit von `s`
+
+- benötigt eine Python-Installation (alternativ `shell.nix` für nixOS)
+
+1. `cd Calculator`
+2. `cargo run --count 1 100` (zählt die Anzahl Quersummen von `s=1` bis `s=100` nach dem vorgegebenen Muster und schreibt diese in `../Data/result_counter_1-100.txt`)
+3. cd `../Visualizer`
+4. `python3 main.py ../Data/result_counter_1-100.txt` (Stellt die Daten in einem Koordinatensystem dar, welches unter `../Data/result_counter_1-100.png` gespeichert wird)
