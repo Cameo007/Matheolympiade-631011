@@ -1,10 +1,34 @@
+use std::env;
 use std::ops::{Add, Range};
 use num_bigint::{BigUint, ToBigUint};
 use std::collections::HashMap;
 
 fn main() {
-    print_cross_sums_per_s(1..100);
-    //count_cross_sums_per_s(1..100);
+    let mut args: Vec<String> = env::args().collect();
+    let binary_name = args[0].to_owned();
+    args = args[1..].to_vec();
+
+    if args.len() >= 2 {
+        if args.contains(&String::from("-c")) || args.contains(&String::from("--count")) {
+            args.retain(|arg| (arg != &String::from("-c") || arg != "--count"));
+            args.sort();
+
+            let start: usize = args[0].parse().expect(&format!("{} is not an integer!", args[0]));
+            let stop: usize = args[1].parse().expect(&format!("{} is not an integer!", args[0]));
+            count_cross_sums_per_s(start..stop);
+        } else {
+            args.sort();
+
+            let start: usize = args[0].parse().expect(&format!("{} is not an integer!", args[0]));
+            let stop: usize = args[1].parse().expect(&format!("{} is not an integer!", args[0]));
+            print_cross_sums_per_s(start..stop);
+        }
+    } else {
+        println!("Usage: {} [OPTIONS] <START> <STOP>", binary_name);
+        println!("");
+        println!("Options:");
+        println!("-c, --count  Counts all cross sums per s");
+    }
 }
 
 fn count_cross_sums_per_s(s_range: Range<usize>) {
@@ -56,7 +80,7 @@ fn print_cross_sums_per_s(s_range: Range<usize>) {
 
             println!("s = {}", s);
             println!("c = {}² - {}² + {} = {}", n, m, k, &result);
-            println!("Quersumme(c) = {}", cross_sum);
+            println!("Cross sum(c) = {}", cross_sum);
             println!("");
         }
     }
