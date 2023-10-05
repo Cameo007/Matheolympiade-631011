@@ -20,3 +20,5 @@ Dieses Repository beinhaltet den Code der zum Ausrechnen der Quersummen (für Te
 
 # TODO
 - Nix-Shells für /Visualizer mergen
+- Command line args (beide)
+- (Plots in Rust generieren)
