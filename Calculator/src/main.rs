@@ -60,7 +60,7 @@ fn count_cross_sums_per_s(s_range: Range<usize>) {
         cross_sums_per_s.insert(s.to_string(), cross_sums.len());
     }
 
-	let mut file = File::create(&format!("./Data/result_count_s{}-{}", s_range[0], s_range.last().unwrap())).expect("TODO");
+	let mut file = File::create(&format!("./Data/result_count_s{}-{}", s_range.start, s_range.end)).expect("TODO");
     file.write_all(cross_sums_per_s.as_bytes()).expect("TODO");
 	//println!("{:?}", cross_sums_per_s);
 }
