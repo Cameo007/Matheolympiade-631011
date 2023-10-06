@@ -62,7 +62,7 @@ fn count_cross_sums_per_s(s_range: Range<usize>) {
     }
 
 	let mut file = File::create(&format!("./Data/result_count_s{}-{}", s_range.start, s_range.end)).expect("TODO");
-    file.write_all(serde_json::to_string(&cross_sums_per_s).unwrap()).expect("TODO");
+    file.write_all(&serde_json::to_string(&cross_sums_per_s).unwrap().as_bytes()).expect("TODO");
 	//println!("{:?}", cross_sums_per_s);
 }
 
