@@ -2,6 +2,7 @@ use std::env;
 use std::ops::{Add, Range};
 use num_bigint::{BigUint, ToBigUint};
 use std::collections::HashMap;
+use std::fs::File;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
@@ -59,7 +60,9 @@ fn count_cross_sums_per_s(s_range: Range<usize>) {
         cross_sums_per_s.insert(s.to_string(), cross_sums.len());
     }
 
-	println!("{:?}", cross_sums_per_s);
+	let mut file = File::create(&format!("./Data/result_count_s{}-{}", s_range[0], s_range.last().unwrap())).expect("TODO");
+    file.write_all(cross_sums_per_s.to_bytes()).expect("TODO");
+	//println!("{:?}", cross_sums_per_s);
 }
 
 fn print_cross_sums_per_s(s_range: Range<usize>) {
