@@ -19,4 +19,5 @@ Dieses Repository beinhaltet den Code der zum Ausrechnen der Quersummen (für Te
 5. `python3 main.py ../Data/result_counter_1-100.json` (Stellt die Daten in einem Koordinatensystem dar, welches unter `../Data/result_counter_1-100.png` gespeichert wird)
 
 # TODO
-- (Plots in Rust generieren)
+- Plots in Rust generieren
+- Ergebnisse direkt in Datei schreiben
