@@ -3,6 +3,7 @@ use std::ops::{Add, Range};
 use num_bigint::{BigUint, ToBigUint};
 use std::collections::HashMap;
 use std::fs::File;
+use std::io::Write;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
