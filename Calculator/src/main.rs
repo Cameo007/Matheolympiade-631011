@@ -1,9 +1,10 @@
 use std::env;
-use std::ops::{Add, Range};
+use std::io::Write;
+use std::ops::Add;
 use num_bigint::{BigUint, ToBigUint};
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::Write;
+use std::fs;
+use std::fs::OpenOptions;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
@@ -11,19 +12,21 @@ fn main() {
     args = args[1..].to_vec();
 
     if args.len() >= 2 {
+        fs::create_dir_all("./Data/").unwrap();
+
         if args.contains(&String::from("-c")) || args.contains(&String::from("--count")) {
-            args.retain(|arg| (arg != &String::from("-c") || arg != "--count"));
+            args.retain(|arg| (arg != &String::from("-c") && arg != &String::from("--count")));
             args.sort();
 
             let start: usize = args[0].parse().expect(&format!("{} is not an integer!", args[0]));
             let stop: usize = args[1].parse().expect(&format!("{} is not an integer!", args[0]));
-            count_cross_sums_per_s(start..stop);
+            count_cross_sums_per_s(start, stop);
         } else {
             args.sort();
 
             let start: usize = args[0].parse().expect(&format!("{} is not an integer!", args[0]));
             let stop: usize = args[1].parse().expect(&format!("{} is not an integer!", args[0]));
-            print_cross_sums_per_s(start..stop);
+            find_cross_sums_per_s(start, stop);
         }
     } else {
         println!("Usage: {} [OPTIONS] <START> <STOP>", binary_name);
@@ -33,14 +36,16 @@ fn main() {
     }
 }
 
-fn count_cross_sums_per_s(s_range: Range<usize>) {
+fn count_cross_sums_per_s(start: usize, stop: usize) {
 	let mut cross_sums_per_s: HashMap<String, usize> = HashMap::new();
 
-    for s in s_range {
+    for s in start..stop {
         let k_vec: Vec<u8>  = vec![1; s];
         let m_vec: Vec<u8> = vec![4; s];
 
         let mut cross_sums: Vec<BigUint> = vec![];
+
+        println!("s = {}", s);
 
         for i in 0..k_vec.len() {
             let mut n_vec: Vec<u8>  = vec![4; s];
@@ -54,20 +59,29 @@ fn count_cross_sums_per_s(s_range: Range<usize>) {
             let cross_sum: BigUint = calc_cross_sum(&result);
 
             if !cross_sums.contains(&cross_sum) {
+                println!("{}", cross_sum);
                 cross_sums.push(cross_sum);
             }
+        }
+
+        if s < stop -1 {
+            println!("");
         }
 
         cross_sums_per_s.insert(s.to_string(), cross_sums.len());
     }
 
-	let mut file = File::create(&format!("./Data/result_count_s{}-{}", s_range.start, s_range.end)).expect("TODO");
-    file.write_all(&serde_json::to_string(&cross_sums_per_s).unwrap().as_bytes()).expect("TODO");
-	//println!("{:?}", cross_sums_per_s);
+    fs::write(format!("./Data/result_count_s{}-{}.json", start, stop), &serde_json::to_string(&cross_sums_per_s).unwrap()).expect("Unable to write file");
 }
 
-fn print_cross_sums_per_s(s_range: Range<usize>) {
-    for s in s_range {
+fn find_cross_sums_per_s(start: usize, stop: usize) {
+    let mut file = OpenOptions::new()
+            .append(true)
+            .create(true)
+            .open(format!("./Data/result_s{}-{}.txt", start, stop))
+            .expect("Unable to open file");
+
+    for s in start..stop {
         let k_vec: Vec<u8>  = vec![1; s];
         let m_vec: Vec<u8> = vec![4; s];
 
@@ -85,7 +99,15 @@ fn print_cross_sums_per_s(s_range: Range<usize>) {
             println!("s = {}", s);
             println!("c = {}² - {}² + {} = {}", n, m, k, &result);
             println!("Cross sum(c) = {}", cross_sum);
-            println!("");
+
+            if s < stop -1 || ( s == stop -1 && i < k_vec.len() -1) {
+                println!("");
+            }
+
+            writeln!(file, "s = {}", s).expect("TODO");
+            writeln!(file, "c = {}² - {}² + {} = {}", n, m, k, &result).expect("TODO");
+            writeln!(file, "Cross sum(c) = {}", cross_sum).expect("TODO");
+            writeln!(file, "").expect("TODO");
         }
     }
 }

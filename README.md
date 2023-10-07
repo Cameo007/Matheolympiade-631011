@@ -20,4 +20,4 @@ Dieses Repository beinhaltet den Code der zum Ausrechnen der Quersummen (für Te
 
 # TODO
 - Plots in Rust generieren
-- Ergebnisse direkt in Datei schreiben
+- `.expect("TODO")` durch genauere Fehlermeldungen ersetzen
