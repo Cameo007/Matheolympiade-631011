@@ -3,8 +3,20 @@ name: Rust
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/LICENSE.md'
+      - '**/shell.nix'
+      - '**/.gitignore'
+      - '**/dependabot.yml'
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/LICENSE.md'
+      - '**/shell.nix'
+      - '**/.gitignore'
+      - '**/dependabot.yml'
 
 env:
   CARGO_TERM_COLOR: always
