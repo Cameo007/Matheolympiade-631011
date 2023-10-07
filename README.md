@@ -3,7 +3,7 @@
 Dieses Repository beinhaltet den Code der zum Ausrechnen der Quersummen (für Teil a & b) und Darstellen der Anzahl der Quersummen in Abhängigkeit von `s` (für Teil b) der 1. Aufgabe, der 1. Runde, der 63. Mathematikolympiade für die 9.- und 10. Klasse benutzt wurde.
 
 ## Anforderungen
-- [Rust-Installation](https://rustup.rs/) (alternativ mit `nix-shell shell.nix` für NixOS)
+- [Rust-Installation](https://rustup.rs/) (alternativ mit `nix-shell` für NixOS)
 
 ## Ausrechnen
 #### berechnet alle Quersummen von `s=1` bis `s=100` nach dem vorgegebenen Muster und schreibt diese in `../Data/result_1-100.txt`
