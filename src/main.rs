@@ -62,37 +62,44 @@ fn plot(data: Vec<(f64, f64)>, s_start: usize, s_stop: usize) {
 
 fn count_cross_sums_per_s(start: usize, stop: usize) {
 	let mut cross_sums_per_s: HashMap<u64, u64> = HashMap::new();
+    let mut threads = vec![];
 
     for s in start..stop {
-        let k_vec: Vec<u8>  = vec![1; s];
-        let m_vec: Vec<u8> = vec![4; s];
+        threads.push(thread::spawn(move || {
+            let k_vec: Vec<u8>  = vec![1; s];
+            let m_vec: Vec<u8> = vec![4; s];
 
-        let mut cross_sums: Vec<BigUint> = vec![];
+            let mut cross_sums: Vec<BigUint> = vec![];
 
-        println!("s = {}", s);
+            println!("s = {}", s);
 
-        for i in 0..k_vec.len() {
-            let mut n_vec: Vec<u8>  = vec![4; s];
-            n_vec[i] = 5;
+            for i in 0..k_vec.len() {
+                let mut n_vec: Vec<u8>  = vec![4; s];
+                n_vec[i] = 5;
 
-            let k: BigUint = concat(&k_vec);
-            let m: BigUint = concat(&m_vec);
-            let n: BigUint = concat(&n_vec);
+                let k: BigUint = concat(&k_vec);
+                let m: BigUint = concat(&m_vec);
+                let n: BigUint = concat(&n_vec);
 
-            let result: BigUint = calc_formula(&k, &m, &n);
-            let cross_sum: BigUint = calc_cross_sum(&result);
+                let result: BigUint = calc_formula(&k, &m, &n);
+                let cross_sum: BigUint = calc_cross_sum(&result);
 
-            if !cross_sums.contains(&cross_sum) {
-                println!("{}", cross_sum);
-                cross_sums.push(cross_sum);
+                if !cross_sums.contains(&cross_sum) {
+                    println!("{}", cross_sum);
+                    cross_sums.push(cross_sum);
+                }
             }
-        }
 
-        if s < stop -1 {
-            println!("");
-        }
+            if s < stop -1 {
+                println!("");
+            }
 
-        cross_sums_per_s.insert(s as u64, cross_sums.len() as u64);
+            (s as u64, cross_sums.len() as u64)
+        }));
+    }
+    for thread in threads {
+        let data: (u64, u64) = thread.join().unwrap();
+        cross_sums_per_s.insert(data.0, data.1);
     }
 
     let cross_sums_per_s_json: HashMap<String, u64> = HashMap::from_iter(
@@ -109,48 +116,40 @@ fn count_cross_sums_per_s(start: usize, stop: usize) {
 }
 
 fn find_cross_sums_per_s(start: usize, stop: usize) {
-    let mut threads = vec![];
-
     for s in start..stop {
-        threads.push(thread::spawn(move || {
-            for i in 0..s {
-                let k_vec: Vec<u8>  = vec![1; s];
-                let m_vec: Vec<u8> = vec![4; s];
+        for i in 0..s {
+            let k_vec: Vec<u8>  = vec![1; s];
+            let m_vec: Vec<u8> = vec![4; s];
 
-                let mut n_vec: Vec<u8>  = vec![4; s];
-                n_vec[i] = 5;
+            let mut n_vec: Vec<u8>  = vec![4; s];
+            n_vec[i] = 5;
 
-                let k: BigUint = concat(&k_vec);
-                let m: BigUint = concat(&m_vec);
-                let n: BigUint = concat(&n_vec);
+            let k: BigUint = concat(&k_vec);
+            let m: BigUint = concat(&m_vec);
+            let n: BigUint = concat(&n_vec);
 
-                let result: BigUint = calc_formula(&k, &m, &n);
-                let cross_sum: BigUint = calc_cross_sum(&result);
+            let result: BigUint = calc_formula(&k, &m, &n);
+            let cross_sum: BigUint = calc_cross_sum(&result);
 
-                println!("s = {}", s);
-                println!("c = {}² - {}² + {} = {}", n, m, k, &result);
-                println!("Cross sum(c) = {}", cross_sum);
+            println!("s = {}", s);
+            println!("c = {}² - {}² + {} = {}", n, m, k, &result);
+            println!("Cross sum(c) = {}", cross_sum);
 
-                if s < stop -1 || ( s == stop -1 && i < k_vec.len() -1) {
-                    println!("");
-                }
-
-                let mut file = OpenOptions::new()
-                    .append(true)
-                    .create(true)
-                    .open(format!("./Data/result_s{}-{}.txt", start, stop))
-                    .expect("Unable to open file");
-
-                writeln!(file, "s = {}", s).expect("TODO");
-                writeln!(file, "c = {}² - {}² + {} = {}", n, m, k, &result).expect("TODO");
-                writeln!(file, "Cross sum(c) = {}", cross_sum).expect("TODO");
-                writeln!(file, "").expect("TODO");
+            if s < stop -1 || ( s == stop -1 && i < k_vec.len() -1) {
+                println!("");
             }
-        }));
-    }
 
-    for thread in threads {
-        thread.join().unwrap();
+            let mut file = OpenOptions::new()
+                .append(true)
+                .create(true)
+                .open(format!("./Data/result_s{}-{}.txt", start, stop))
+                .expect("Unable to open file");
+
+            writeln!(file, "s = {}", s).expect("TODO");
+            writeln!(file, "c = {}² - {}² + {} = {}", n, m, k, &result).expect("TODO");
+            writeln!(file, "Cross sum(c) = {}", cross_sum).expect("TODO");
+            writeln!(file, "").expect("TODO");
+        }
     }
 }
 
