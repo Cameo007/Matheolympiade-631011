@@ -1,6 +1,6 @@
 [package]
 name = "matheolympiade-631011"
-version = "0.9.0"
+version = "1.0.0"
 authors = ["Pascal Dietrich <pascal.1.dietrich@hotmail.com>"]
 edition = "2021"
 description = "Dieses Programm wurde zum Ausrechnen der Quersummen (für Teil a & b) und Darstellen der Anzahl der Quersummen in Abhängigkeit von s (für Teil b) der 1. Aufgabe, der 1. Runde, der 63. Mathematikolympiade für die 9.- und 10. Klasse benutzt."
