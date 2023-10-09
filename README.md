@@ -15,6 +15,3 @@ Dieses Repository beinhaltet den Code der zum Ausrechnen der Quersummen (für Te
 
 
 1. `./matheolympiade-631011 --count 1 100` (Windows: `./matheolympiade-631011.exe --count 1 100`)
-
-# TODO
-- Multithreading für `find_cross_sums_per_s()``
