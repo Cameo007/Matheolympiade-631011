@@ -86,10 +86,6 @@ fn count_cross_sums_per_s(start: usize, stop: usize) {
                 }
             }
 
-            if s < stop -1 {
-                println!("");
-            }
-
             (s as u64, cross_sums.len() as u64)
         }));
     }
@@ -139,10 +135,6 @@ fn find_cross_sums_per_s(start: usize, stop: usize) {
                 println!("s = {}", s);
                 println!("c = {}² - {}² + {} = {}", n, m, k, &result);
                 println!("Cross sum(c) = {}", cross_sum);
-
-                if s < stop -1 || ( s == stop -1 && i < k_vec.len() -1) {
-                    println!("");
-                }
 
                 data.push_str(&format!("s = {}\nc = {}² - {}² + {} = {}\nCross sum(c) = {}\n\n", s, n, m, k, &result, cross_sum));
             }
