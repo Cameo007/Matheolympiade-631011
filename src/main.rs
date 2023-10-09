@@ -12,9 +12,6 @@ use plotlib::view::ContinuousView;
 use plotlib::style::PointStyle;
 
 fn main() {
-    use std::time::Instant;
-    let now = Instant::now();
-
     let mut args: Vec<String> = env::args().collect();
     let binary_name = args[0].to_owned();
     args = args[1..].to_vec();
@@ -42,8 +39,6 @@ fn main() {
         println!("Options:");
         println!("-c, --count  Counts all cross sums per s");
     }
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
 }
 
 
