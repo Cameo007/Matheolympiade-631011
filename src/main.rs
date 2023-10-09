@@ -67,8 +67,6 @@ fn count_cross_sums_per_s(start: usize, stop: usize) {
 
             let mut cross_sums: Vec<BigUint> = vec![];
 
-            println!("s = {}", s);
-
             for i in 0..k_vec.len() {
                 let mut n_vec: Vec<u8>  = vec![4; s];
                 n_vec[i] = 5;
@@ -81,10 +79,10 @@ fn count_cross_sums_per_s(start: usize, stop: usize) {
                 let cross_sum: BigUint = calc_cross_sum(&result);
 
                 if !cross_sums.contains(&cross_sum) {
-                    println!("{}", cross_sum);
                     cross_sums.push(cross_sum);
                 }
             }
+	    println!("s = {}\n{}\n\n", s, cross_sums.len());
 
             (s as u64, cross_sums.len() as u64)
         }));
@@ -132,9 +130,7 @@ fn find_cross_sums_per_s(start: usize, stop: usize) {
                 let result: BigUint = calc_formula(&k, &m, &n);
                 let cross_sum: BigUint = calc_cross_sum(&result);
 
-                println!("s = {}", s);
-                println!("c = {}² - {}² + {} = {}", n, m, k, &result);
-                println!("Cross sum(c) = {}", cross_sum);
+                println!("s = {}\nc = {}² - {}² + {} = {}\nCross sum(c) = {}\n\n", s, n, m, k, &result, cross_sum);
 
                 data.push_str(&format!("s = {}\nc = {}² - {}² + {} = {}\nCross sum(c) = {}\n\n", s, n, m, k, &result, cross_sum));
             }
