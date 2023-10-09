@@ -1,10 +1,11 @@
 use std::{env, thread};
-use std::io::Write;
 use std::ops::Add;
 use num_bigint::{BigUint, ToBigUint};
 use std::collections::HashMap;
-use std::fs;
+use std::path::Path;
+use std::fs::{self, remove_file};
 use std::fs::OpenOptions;
+use std::io::{BufWriter, Write};
 use plotlib::page::Page;
 use plotlib::repr::Plot;
 use plotlib::view::ContinuousView;
@@ -62,7 +63,7 @@ fn plot(data: Vec<(f64, f64)>, s_start: usize, s_stop: usize) {
 
 fn count_cross_sums_per_s(start: usize, stop: usize) {
 	let mut cross_sums_per_s: HashMap<u64, u64> = HashMap::new();
-    let mut threads = vec![];
+    let mut threads: Vec<thread::JoinHandle<(u64, u64)>> = vec![];
 
     for s in start..stop {
         threads.push(thread::spawn(move || {
@@ -116,40 +117,55 @@ fn count_cross_sums_per_s(start: usize, stop: usize) {
 }
 
 fn find_cross_sums_per_s(start: usize, stop: usize) {
+    if Path::new(&format!("./Data/result_s{}-{}.txt", start, stop)).exists() {
+        remove_file(format!("./Data/result_s{}-{}.txt", start, stop)).unwrap();
+    }
+
+    let mut threads: Vec<thread::JoinHandle<String>> = vec![];
+
     for s in start..stop {
-        for i in 0..s {
-            let k_vec: Vec<u8>  = vec![1; s];
-            let m_vec: Vec<u8> = vec![4; s];
+        threads.push(thread::spawn(move || {
+            let mut data: String = String::new();
 
-            let mut n_vec: Vec<u8>  = vec![4; s];
-            n_vec[i] = 5;
+            for i in 0..s {
+                let k_vec: Vec<u8>  = vec![1; s];
+                let m_vec: Vec<u8> = vec![4; s];
 
-            let k: BigUint = concat(&k_vec);
-            let m: BigUint = concat(&m_vec);
-            let n: BigUint = concat(&n_vec);
+                let mut n_vec: Vec<u8>  = vec![4; s];
+                n_vec[i] = 5;
 
-            let result: BigUint = calc_formula(&k, &m, &n);
-            let cross_sum: BigUint = calc_cross_sum(&result);
+                let k: BigUint = concat(&k_vec);
+                let m: BigUint = concat(&m_vec);
+                let n: BigUint = concat(&n_vec);
 
-            println!("s = {}", s);
-            println!("c = {}² - {}² + {} = {}", n, m, k, &result);
-            println!("Cross sum(c) = {}", cross_sum);
+                let result: BigUint = calc_formula(&k, &m, &n);
+                let cross_sum: BigUint = calc_cross_sum(&result);
 
-            if s < stop -1 || ( s == stop -1 && i < k_vec.len() -1) {
-                println!("");
+                println!("s = {}", s);
+                println!("c = {}² - {}² + {} = {}", n, m, k, &result);
+                println!("Cross sum(c) = {}", cross_sum);
+
+                if s < stop -1 || ( s == stop -1 && i < k_vec.len() -1) {
+                    println!("");
+                }
+
+                data.push_str(&format!("s = {}\nc = {}² - {}² + {} = {}\nCross sum(c) = {}\n\n", s, n, m, k, &result, cross_sum));
             }
 
-            let mut file = OpenOptions::new()
-                .append(true)
-                .create(true)
-                .open(format!("./Data/result_s{}-{}.txt", start, stop))
-                .expect("Unable to open file");
+            data
+        }));
+    }
 
-            writeln!(file, "s = {}", s).expect("TODO");
-            writeln!(file, "c = {}² - {}² + {} = {}", n, m, k, &result).expect("TODO");
-            writeln!(file, "Cross sum(c) = {}", cross_sum).expect("TODO");
-            writeln!(file, "").expect("TODO");
-        }
+    let file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(format!("./Data/result_s{}-{}.txt", start, stop))
+        .expect("Unable to open file");
+
+    let mut file_writer = BufWriter::new(file);
+
+    for thread in threads {
+        writeln!(file_writer, "{}", thread.join().unwrap()).unwrap();
     }
 }
 
